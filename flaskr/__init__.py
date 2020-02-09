@@ -62,15 +62,16 @@ def get_questions():
 
     :return:
     """
+    page = request.args.get('page', 1, type=int)
+    questions, total_questions_count = get_questions_list(page=page)
+
+    if len(questions) == 0:
+        abort(StatusCode.HTTP_404_NOT_FOUND.value)
+
     try:
-        page = request.args.get('page', 1, type=int)
-        questions, total_questions_count = get_questions_list(page=page)
         categories = {
             category.id: category.type for category in Category.query.all()
         }
-
-        if len(questions) == 0:
-            abort(StatusCode.HTTP_404_NOT_FOUND.value)
 
         return jsonify({
             'success': True,
@@ -91,12 +92,12 @@ def get_questions_by_category(category_id):
     :param category_id:
     :return:
     """
+    category = Category.query.get(category_id)
+
+    if not category:
+        abort(StatusCode.HTTP_404_NOT_FOUND.value)
+
     try:
-        category = Category.query.get(category_id)
-
-        if not category:
-            abort(StatusCode.HTTP_404_NOT_FOUND.value)
-
         questions, total_questions_count = get_questions_list(
             category_id=category_id
         )
@@ -106,7 +107,6 @@ def get_questions_by_category(category_id):
             "total_questions": total_questions_count,
             "current_category": category.format(),
         })
-
     except Exception:
         abort(StatusCode.HTTP_400_BAD_REQUEST.value)
 
@@ -170,12 +170,12 @@ def add_question(token):
 
     :return:
     """
+    question = request.get_json()
+
+    if not question:
+        abort(StatusCode.HTTP_400_BAD_REQUEST.value)
+
     try:
-        question = request.get_json()
-
-        if not question:
-            abort(StatusCode.HTTP_400_BAD_REQUEST.value)
-
         question = Question(**question)
         question.insert()
 

@@ -3,13 +3,10 @@ from sqlalchemy import Column, String, Integer, create_engine
 from flask_sqlalchemy import SQLAlchemy
 import json
 
-database_name = "trivia"
-database_path = os.environ.get('DATABASE_URL')
-
 db = SQLAlchemy()
 
 
-def setup_db(app, database_path=database_path):
+def setup_db(app, database_path=os.environ.get('DATABASE_URL')):
     """
     Binds flask application and SQLAlchemy service.
 
