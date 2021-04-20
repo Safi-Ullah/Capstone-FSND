@@ -27,7 +27,7 @@ packaging==20.1
 pluggy==0.13.1
 psycopg2==2.8.4
 psycopg2-binary==2.8.2
-py==1.8.1
+py==1.10.0
 pycryptodome==3.3.1
 PyJWT==1.7.1
 pylint==2.3.1
